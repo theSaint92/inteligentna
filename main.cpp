@@ -3,6 +3,7 @@
 #include <vector>
 #include <cstring>
 #include "Data.h"
+#include <map>
 
 using namespace std;
 
@@ -45,19 +46,50 @@ int main(int argc, char* argv[])
 		}
 	}
 
+	//try {
+	//	Data wszystkie_dane(dane1);
+	//}
+	//catch (exception)
+	//{
+	//	cout << "nie mozna wyznaczyc sredniej geometrycznej\n" << endl;
+	//}
+
 	Data wszystkie_dane(dane1);
 	cout << "getMin(): " << wszystkie_dane.getMin() << endl;
 	cout << "getMax(): " << wszystkie_dane.getMax() << endl;
 	cout << "getSredniaArytmetyczna(): " << wszystkie_dane.getSredniaArytmetyczna() << endl;
-	//cout << "getSredniaHarmoniczna(): " << wszystkie_dane.getSredniaHarmoniczna() << endl;
+	cout << "getSredniaHarmoniczna(): " << wszystkie_dane.getSredniaHarmoniczna() << endl;
+
 	//cout << "getSredniaGeometryczna(): " << wszystkie_dane.getSredniaGeometryczna() << endl;
-	//cout << "getMediana(): " << wszystkie_dane.getMediana() << endl;
-	//cout << "getWariancja(): " << wszystkie_dane.getWariancja() << endl;
-	//cout << "getOdchylenieStandardowe(): " << wszystkie_dane.getOdchylenieStandardowe() << endl;
-	//cout << "getTrzeciMomentCentralny(): " << wszystkie_dane.getTrzeciMomentCentralny() << endl;
-	//cout << "getWspolczynnikAsymetrii(): " << wszystkie_dane.getWspolczynnikAsymetrii() << endl;
-	//cout << "getWspolczynnikAsDominanta: " << wszystkie_dane.getWspolczynnikAsDominanta << endl;
-	//cout << "getKurtoza(): " << wszystkie_dane.getKurtoza() << endl;
+
+	try {
+		cout << "srednia geometryczna wynosi:" << " " << wszystkie_dane.getSredniaGeometryczna();
+		cout << "\n" << endl;
+	}
+	catch (exception)
+	{
+		cout << "nie mozna wyznaczyc sredniej geometrycznej\n" << endl;
+	}
+
+	cout << "getMediana(): " << wszystkie_dane.getMediana() << endl;
+
+	if (wszystkie_dane.getDominanta()!= pair<double, int>())
+	{
+		cout << "\nDominanta wynosi " << wszystkie_dane.getDominanta().first << ", a jej ilosc wystapien to " << wszystkie_dane.getDominanta().second << "\n";
+	}
+	else
+	{
+		cout << "\nDominanta nie istnieje\n";
+	}
+
+	cout << "getWariancja(): " << wszystkie_dane.getWariancja() << endl;
+
+	cout << "getOdchylenieStandardowe(): " << wszystkie_dane.getOdchylenieStandardowe() << endl;
+
+	cout << "getTrzeciMomentCentralny(): " << wszystkie_dane.getTrzeciMomentCentralny() << endl;
+	cout << "getWspolczynnikAsymetrii(): " << wszystkie_dane.getWspolczynnikAsymetrii() << endl;
+	cout << "getKurtoza(): " << wszystkie_dane.getKurtoza() << endl;
+
 
 
 	getchar();

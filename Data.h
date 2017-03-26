@@ -2,6 +2,11 @@
 
 #include "Histogram.h"
 #include <vector>
+#include <math.h>
+#include <algorithm>
+#include <map>
+
+using namespace std;
 
 class Data
 {
@@ -17,7 +22,8 @@ class Data
 	double srednia_harmoniczna;
 	double srednia_geometryczna;
 	double mediana;
-	//pair<double, int> dominatnta;
+	pair<double, int> dominanta;
+	vector <double> dane_standaryzowane;
 
 	//Miary rozproszenia
 	double wariancja;
@@ -47,7 +53,7 @@ public:
 	double getSredniaHarmoniczna();
 	double getSredniaGeometryczna();
 	double getMediana();
-	//pair<double, int> dominatnta;
+	pair<double, int> getDominanta();
 	double getWariancja();
 	double getOdchylenieStandardowe();
 	double getTrzeciMomentCentralny();
@@ -64,7 +70,7 @@ public:
 	void wylicz_srednia_harmoniczna();
 	void wylicz_srednia_geometryczna();
 	void wylicz_mediana();
-	//pair<double, int> dominatnta;
+	void wylicz_dominanta();
 	void wylicz_wariancja();
 	void wylicz_odchylenie_standardowe();
 	void wylicz_trzeci_moment_centralny();
