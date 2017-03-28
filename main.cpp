@@ -3,6 +3,8 @@
 #include <vector>
 #include <cstring>
 #include "Data.h"
+#include "Hipotezy.h"
+#include "Histogram.h"
 #include <map>
 
 using namespace std;
@@ -26,8 +28,7 @@ int main(int argc, char* argv[])
 
 	//WCZYTYWANIE Z PLIKU
 	fstream plik;
-	vector <double> dane1;
-	vector <double> dane2;
+	vector <double> dane1, dane2;
 	for (int i = 1; i < argc; i++) {
 		cout << i << ". argv = " << argv[i] << endl;
 		if (!strcmp(argv[i], "--file") || !strcmp(argv[i], "-f")) {
@@ -55,6 +56,7 @@ int main(int argc, char* argv[])
 	//}
 
 	Data wszystkie_dane(dane1);
+	
 	cout << "getMin(): " << wszystkie_dane.getMin() << endl;
 	cout << "getMax(): " << wszystkie_dane.getMax() << endl;
 	cout << "getSredniaArytmetyczna(): " << wszystkie_dane.getSredniaArytmetyczna() << endl;
@@ -90,7 +92,7 @@ int main(int argc, char* argv[])
 	cout << "getWspolczynnikAsymetrii(): " << wszystkie_dane.getWspolczynnikAsymetrii() << endl;
 	cout << "getKurtoza(): " << wszystkie_dane.getKurtoza() << endl;
 
-
+	
 
 	getchar();
 

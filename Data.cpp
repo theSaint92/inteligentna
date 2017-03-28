@@ -32,6 +32,10 @@ Data::~Data() {
 
 }
 
+double Data::operator[](int i)
+{
+	return dane[i];
+}
 
 double Data::getMin() {
 	return min;
@@ -86,9 +90,9 @@ double Data::getKurtoza() {
 	return kurtoza;
 }
 
-Histogram Data::getHistogram() {
-	return hist;
-}
+//Histogram Data::getHistogram() {
+//	return hist;
+//}
 
 void Data::wylicz_min() {
 	min = dane[0];
@@ -96,6 +100,11 @@ void Data::wylicz_min() {
 
 void Data::wylicz_max() {
 	max = dane[dane.size() - 1];
+}
+
+int Data::getRozmiar()
+{
+	return dane.size();
 }
 
 void Data::wylicz_srednia_arytmetyczna() {

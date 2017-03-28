@@ -1,6 +1,5 @@
 #pragma once
 
-#include "Histogram.h"
 #include <vector>
 #include <math.h>
 #include <algorithm>
@@ -11,7 +10,7 @@ using namespace std;
 class Data
 {
 	//Same dane
-	std::vector<double> dane;
+	vector <double> dane;
 
 	//Max i min
 	double min;
@@ -37,15 +36,16 @@ class Data
 	//Miary koncentracji
 	double kurtoza;
 
-	//Dane do histogramu
-	Histogram hist;
+	//hipotezy
+	double wspolczynnik_z;
 
 public:
 
 	//Konstruktory i Destruktory
-	Data(std::vector<double> dane_wejsciowe);
+	Data(vector<double> dane_wejsciowe);
 	~Data();
 
+	double operator[](int i);
 	//Getery
 	double getMin();
 	double getMax();
@@ -60,7 +60,7 @@ public:
 	double getWspolczynnikAsymetrii();
 	double getWspolczynnikAsDominanta();
 	double getKurtoza();
-	Histogram getHistogram();
+	int getRozmiar();
 
 
 	//Funkcje
@@ -77,9 +77,7 @@ public:
 	void wylicz_wspolczynnik_asymetrii();
 	void wylicz_wspolczynnik_as_dominanta();
 	void wylicz_kurtoza();
-
 	Data usuwanie_el_odstajacych(double przedzial_ufnosci);
 	Data standaryzacja_zmiennej();
-
 };
 
