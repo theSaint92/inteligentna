@@ -5,6 +5,10 @@
 #include <algorithm>
 #include "Data.h"
 #include "Hipotezy.h"
+//
+//
+//#define GNUPLOT_PATH "C:\\gnuplot\\bin"
+//#include "gnuplot_i.hpp"
 
 
 using namespace std;
@@ -19,7 +23,7 @@ class Histogram
 public:
 	Histogram();
 
-	void rysuj_histogram(Data dane_etykieta);
+	void rysuj_histogram(Data dane_etykieta1, Data dane_etykieta2, Data dane);
 	void dane_histogram(Data dane_etykieta);
 
 	~Histogram();

@@ -5,12 +5,11 @@
 
 Histogram::Histogram()
 {
-
 }
 
-void Histogram::rysuj_histogram(Data dane_etykieta)
+void Histogram::rysuj_histogram(Data dane_etykieta1, Data dane_etykieta2, Data dane )
 {
-	dane_histogram(dane_etykieta);
+	
 
 	////		zainicjowanie programu GnuPlot
 	Gnuplot::set_GNUPlotPath(GNUPLOT_PATH);
@@ -30,7 +29,7 @@ void Histogram::rysuj_histogram(Data dane_etykieta)
 	//// 		zakres osi x
 
 
-	main_plot.set_xrange(dane_etykieta.getMin(), dane_etykieta.getMax());
+	main_plot.set_xrange(dane.getMin(), dane.getMax());
 	main_plot.set_yrange(0, 100);
 
 
@@ -43,46 +42,45 @@ void Histogram::rysuj_histogram(Data dane_etykieta)
 	//	main_plot.plot_xy(x, y, "Pogladowa funkcja");
 	//}
 
+	dane_histogram(dane_etykieta1);
 	vector<double> x;
 	vector<double> y;
 
-	/*vector<double> x1;
-	vector<double> y1;
-	vector<double> x2;
-	vector<double> y2;*/
-
 	for (int i = 0; i < ilosc_przedzialow; i++) {
-		x.push_back(dane_etykieta.getMin() + i*rozstep + rozstep / 2);
+		x.push_back(dane_etykieta1.getMin() + i*rozstep + rozstep / 2);
 		y.push_back(czestosci[i]);
 		//cout << "[" << x[i] << ", " << y[i] << "]" << endl;
 	}
 
-	//for (int i = 0; i < dan1.ilosc_przedzialow; i++) {
-	//	x1.push_back(dan1.min + i*dan1.rozstep + dan1.rozstep / 2);
-	//	y1.push_back(dan1.czestosci[i]);
-	//	//cout << "[" << x[i] << ", " << y[i] << "]" << endl;
-	//}
+	for (int i = 0; i < ilosc_przedzialow; i++)
+	{
+		czestosci[i] = 0;
+	}
 
-	//for (int i = 0; i < dan2.ilosc_przedzialow; i++) {
-	//	x2.push_back(dan2.min + i*dan2.rozstep + dan2.rozstep / 2);
-	//	y2.push_back(dan2.czestosci[i]);
-	//	//cout << "[" << x[i] << ", " << y[i] << "]" << endl;
-	//}
+	ilosc_przedzialow = 0;
+	przedzial = 0;
+	rozstep = 0;
 
+	vector<double> x2;
+	vector<double> y2;
+	dane_histogram(dane_etykieta2);
 
-	//cout << dane11.size() << " " << dane12.size();
-
+	for (int i = 0; i < ilosc_przedzialow; i++) {
+		x2.push_back(dane_etykieta2.getMin() + i*rozstep + rozstep / 2);
+		y2.push_back(czestosci[i]);
+		//cout << "[" << x[i] << ", " << y[i] << "]" << endl;
+	}
 
 	//main_plot.plot_xy(x, y, "Pogladowa funkcja");
 	main_plot.plot_xy(x, y, "Klasa C1");
-	//main_plot.plot_xy(x2, y2, "Klasa C2");
-	
+	main_plot.plot_xy(x2, y2, "Klasa C2");
+	getchar();
 }
 
 
 void Histogram::dane_histogram (Data dane_etykieta) //na kopii
 {	
-	dane_etykieta.usuwanie_el_odstajacych(0.99);
+	//dane_etykieta.usuwanie_el_odstajacych(0.99);
 
 	ilosc_przedzialow = round( sqrt(dane_etykieta.getRozmiar()));
 
@@ -104,7 +102,7 @@ void Histogram::dane_histogram (Data dane_etykieta) //na kopii
 			if (dane_etykieta[i] <= dane_etykieta.getMin() + rozstep *k)
 			{
 				czestosci[k] ++;
-				continue;
+				break;
 			}
 		}
 	}

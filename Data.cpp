@@ -81,7 +81,7 @@ double Data::getWspolczynnikAsDominanta() {
 	return wspolczynnik_as_dominanta;
 }
 
-pair<double, int> Data:: getDominanta()
+pair<double, int> Data::getDominanta()
 {
 	return dominanta;
 }
@@ -203,12 +203,12 @@ void Data::wylicz_dominanta()
 	{
 		if (it->first != max.first && it->second == max.second)
 		{
-			dominanta= pair<double, int>();
+			dominanta = pair<double, int>();
 			return;
 		}
 	}
 
-	dominanta= max;
+	dominanta = max;
 }
 
 void Data::wylicz_wariancja()
@@ -260,10 +260,13 @@ void Data::wylicz_kurtoza()
 Data Data::usuwanie_el_odstajacych(double przedzial_ufnosci)
 {
 
-	for (vector <double>:: iterator it=dane.begin() ; it < dane.end(); it++) {
-		if ((*it - srednia_arytmetyczna) > (przedzial_ufnosci* odchylenie_standardowe))
+	for (vector <double>::iterator it = dane.begin(); it < dane.end();) {
+		if (*it - srednia_arytmetyczna > przedzial_ufnosci* odchylenie_standardowe)
 		{
 			it = dane.erase(it);
+		}
+		else{
+			it++;
 		}
 	}
 	return dane;
