@@ -208,6 +208,11 @@ void testowanie_hipotez(Data dane1, Data dane2, double alpha, char* plik) {
 	//Dobra to liczymy teraz fajne rzeczy
 	//GESTOSC ROZKLADU NORMALNEGO
 	// 1/sqrt(2*M_PI) * exp(-x*x/2)
+	
+	pValueNormal = 1 + erf(-abs(z)/sqrt(2));
+	
+	if (pValueNormal > alpha) decisionNormal = "H0 proved";
+	else decisionNormal = "H0 rejected(alternative proved)";
 
 	
 
