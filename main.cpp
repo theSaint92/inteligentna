@@ -159,8 +159,8 @@ int main(int argc, char* argv[])
 
 	cout << dane_etykieta1.getRozmiar() << " " << dane_etykieta1.getSredniaArytmetyczna();
 
-	//Histogram hist1;
-	//hist1.rysuj_histogram(*hipoteza.dane_etykieta1, *hipoteza.dane_etykieta2, dane1 );
+	Histogram hist1;
+	hist1.rysuj_histogram(*hipoteza.dane_etykieta1, *hipoteza.dane_etykieta2, dane1 );
 
 	//DLA 200242
 	testowanie_hipotez(dane_etykieta1, dane_etykieta2, 0.010, "./200242/wyniki.txt");
