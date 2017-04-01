@@ -2,6 +2,7 @@
 #include <iostream>
 #include <fstream>
 #include <vector>
+#include <math.h> //exp
 #include <cstring>
 #include "Data.h"
 //#include "Hipotezy.h"
@@ -10,6 +11,7 @@
 using namespace std;
 
 void displayhelp();
+void testowanie_hipotez(Data dane1, Data dane2, double alpha, char* plik);
 
 int main(int argc, char* argv[])
 {
@@ -28,7 +30,7 @@ int main(int argc, char* argv[])
 
 	//WCZYTYWANIE Z PLIKU
 	fstream plik;
-	vector <double> dane1, dane2;
+	vector <double> dane1, dane2, dane1_etykieta1, dane1_etykieta2;
 	for (int i = 1; i < argc; i++) {
 		cout << i << ". argv = " << argv[i] << endl;
 		if (!strcmp(argv[i], "--file") || !strcmp(argv[i], "-f")) {
@@ -41,6 +43,8 @@ int main(int argc, char* argv[])
 				dane1.push_back(temp);
 				plik >> temp;
 				dane2.push_back(temp);
+				if (dane2[k] == 1) dane1_etykieta1.push_back(dane1[k]);
+				if (dane2[k] == 2) dane1_etykieta2.push_back(dane1[k]);
 				cout << "DANE1[" << k << "] = " << dane1[k] << ", DANE2[" << k << "] = " << dane2[k] << ".\n";
 				k++;
 			} while (!plik.eof());
@@ -51,6 +55,8 @@ int main(int argc, char* argv[])
 
 	cout << "Parametry podstawoego zbioru danych: \n" << endl;
 	Data wszystkie_dane(dane1);
+	Data dane_etykieta1(dane1_etykieta1);
+	Data dane_etykieta2(dane1_etykieta2);
 
 	cout << "Miniumum wynosi: " << wszystkie_dane.getMin() << endl;
 	cout << "Maximum wynosi: " << wszystkie_dane.getMax() << endl;
@@ -151,11 +157,17 @@ int main(int argc, char* argv[])
 	cout << "Kurtoza:" << hipoteza.dane_etykieta2->getKurtoza() << endl;
 	cout << endl;
 
-	Histogram hist1;
-	hist1.rysuj_histogram(*hipoteza.dane_etykieta1, *hipoteza.dane_etykieta2, dane1 );
+	cout << dane_etykieta1.getRozmiar() << " " << dane_etykieta1.getSredniaArytmetyczna();
+
+	//Histogram hist1;
+	//hist1.rysuj_histogram(*hipoteza.dane_etykieta1, *hipoteza.dane_etykieta2, dane1 );
+
+	//DLA 200242
+	testowanie_hipotez(dane_etykieta1, dane_etykieta2, 0.010, "./200242/wyniki.txt");
+	//DLA 203940
+	//testowanie_hipotez(dane_etykieta1, dane_etykieta2, 0.010, "./203940/wyniki.txt");
 
 	getchar();
-
 }
 
 void displayhelp() {
@@ -163,4 +175,56 @@ void displayhelp() {
 	cout << "List of parameters:\n";
 	cout << "\t-h\t--help\tDisplay this menu\n";
 	cout << "\t-f\t--file\tFile you want to take data from\n";
+}
+
+
+void testowanie_hipotez(Data dane1, Data dane2, double alpha, char* plik) {
+	fstream wyniki;
+	wyniki.open(plik);
+	
+	int n1 = dane1.getRozmiar();
+	int n2 = dane2.getRozmiar();
+	double m1 = dane1.getSredniaArytmetyczna();
+	double m2 = dane2.getSredniaArytmetyczna();
+	double s1 = dane1.getOdchylenieStandardowe();
+	double s2 = dane2.getOdchylenieStandardowe();
+
+	double dof = 0;
+	double z = 0;
+	double pValueNormal = 0;
+	//double pValueStudent = 0;
+	char* decisionNormal = ""; //"H0 rejected(alternative proved)" or "H0 proved"
+	//char* decisionStudent = "";
+
+	//Liczymy dof dla t-Studenta
+	double dol1 = s1*s1 / n1;
+	double dol2 = s2*s2 / n2;
+	double gora = dol1 + dol2;
+	dof = gora*gora / (dol1*dol1 / (n1 - 1) + dol2*dol2 / (n2 - 1));
+
+	//Liczymy znormalizowana roznice srednich
+	z = (m1 - m2) / sqrt(s1*s1 / n1 + s2*s2 / n2);
+
+	//Dobra to liczymy teraz fajne rzeczy
+	//GESTOSC ROZKLADU NORMALNEGO
+	// 1/sqrt(2*M_PI) * exp(-x*x/2)
+
+	
+
+	wyniki << "1st sample size = " << n1 << endl;
+	wyniki << "2nd sample size = " << n2 << endl << endl;
+
+	wyniki << "1st sample mean = " << m1 << endl;
+	wyniki << "2nd sample mean = " << m2 << endl;
+	wyniki << "1st sample stdev =  " << s1 << endl;
+	wyniki << "2nd sample stdev = " << s2 << endl;
+	wyniki << "Degrees of freedom for Student - t distribution = " << dof << endl << endl;
+
+	wyniki << "Results:" << endl;
+	wyniki << "Statistics value z = " << z << endl;
+	wyniki << "Normal distribution : p - value = " << pValueNormal << endl;
+	//wyniki << "Student - t distribution : p - value = " << pValueStudent << endl;
+	wyniki << "Normal distribution : " << decisionNormal << endl;
+	//wyniki << "Student - t distribution : " << decisionStudent << endl;
+
 }

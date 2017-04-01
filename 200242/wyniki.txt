@@ -1,0 +1,13 @@
+1st sample size = 678
+2nd sample size = 342
+
+1st sample mean = 2.10342
+2nd sample mean = 2.42203
+1st sample stdev =  0.423707
+2nd sample stdev = 0.564542
+Degrees of freedom for Student - t distribution = 540.342
+
+Results:
+Statistics value z = -9.21012
+Normal distribution : p - value = 0
+Normal distribution : 
