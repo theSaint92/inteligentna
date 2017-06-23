@@ -7,24 +7,21 @@ import weka.core.converters.ConverterUtils;
 
 public class Klasyfikacja {
 
-	private Instances dane;
 	//Atrybuty zbioru
 	private int numInstances;
 	private int numAttributes;
 	private double[][] tab;
 	private double[] zakresMin;
 	private double[] zakresMax;
-	//Wyniki z kSrednich
-	private double[][] kSrednichSrodkiSkupien;
-	private int kSrednichLiczbaSkupien;
-	private int kSrednichIteracje;
-	//Wyniki z gazuNeuronowego
-	private double[][] gazNeuronowyWagi;
+	
+	//Wyniki
+	private double[][] srodkiSkupien;
+	private int iteracje;
 	
 	//KONSTRUKTOR
 	public Klasyfikacja(String plik) throws Exception {
 		super();
-		this.dane = ConverterUtils.DataSource.read(plik);
+		Instances dane = ConverterUtils.DataSource.read(plik);
 		numInstances = dane.numInstances();
 		numAttributes = dane.numAttributes();
 		
@@ -64,6 +61,33 @@ public class Klasyfikacja {
 
 	}
 	
+	//SETTER taba
+	public void setTab(double[][] tab) {
+		this.tab = tab;
+		this.numInstances = this.tab.length;
+		this.numAttributes = this.tab[0].length;
+		
+		//Wyznaczanie zakresMin i zakresMax
+		double[] zakresMin = new double[numAttributes];
+		double[] zakresMax = new double[numAttributes];
+		
+		for (int i=0; i<numAttributes; i++) {
+			double maxValue = Double.MIN_VALUE;
+			double minValue = Double.MAX_VALUE;
+			for (int j=0; j<numInstances; j++) {
+				if (tab[j][i] > maxValue)
+					maxValue = tab[j][i];
+				if (tab[j][i] < minValue)
+					minValue = tab[j][i];
+			}
+			zakresMin[i] = minValue;
+			zakresMax[i] = maxValue;
+		}
+		
+		this.zakresMin = zakresMin;
+		this.zakresMax = zakresMax;	
+	}
+	
 	//GETERY
 	public int getNumInstances() {
 		return numInstances;
@@ -85,33 +109,44 @@ public class Klasyfikacja {
 		return zakresMax;
 	}
 
-	public double[][] getkSrednichSrodkiSkupien() {
-		return kSrednichSrodkiSkupien;
-	}
-
-	public int getkSrednichLiczbaSkupien() {
-		return kSrednichLiczbaSkupien;
-	}
-
-	public int getkSrednichIteracje() {
-		return kSrednichIteracje;
+	public int getIteracje() {
+		return iteracje;
 	}
 	
-	public double[][] getGazNeuronowyWagi() {
-		return gazNeuronowyWagi;
+	public double[][] getSrodkiSkupien() {
+		return srodkiSkupien;
 	}
-	
+
+	//Potrzebne algorytmy
 	public void kSrednich(int liczbaSkupien, int maxIteracji) {
 		
-		//Wybieramy pierwsze srodki skupien (pierwsze kilka obserwacji)
+		//Wybieramy pierwsze srodki skupien (losujemy kilka obserwacji)
+		int[] juzWylosowane = new int[liczbaSkupien];
 		double[][] srodkiSkupien = new double[liczbaSkupien][numAttributes];
-		for (int i=0; i<liczbaSkupien; i++)
+		for (int i=0; i<liczbaSkupien; i++) {
+			//Losowanie nowej liczby
+		    boolean czyWylosowana = true;
+		    int losowa = 0;
+		    while (czyWylosowana) {
+		    	czyWylosowana = false;
+		    	losowa = (int)(Math.random()*numInstances);
+		    	for (int j=0; j<i; j++) {
+		    		if (juzWylosowane[j] == losowa) czyWylosowana = true;
+		    	}
+		    	if (!czyWylosowana) {
+		    		juzWylosowane[i] = losowa;
+		    	}
+		    }
+		    
+			//Przypisujemy
 			for (int j=0; j<numAttributes; j++)
-				srodkiSkupien[i][j] = tab[i][j];
+				srodkiSkupien[i][j] = tab[losowa][j];
+		}
+				
 		
-		//Tworzymy tablice - bêdzie nam ona mówi³a, który punkt nale¿y do którego skupienia
-		int[] przynaleznosc = new int [numInstances];
-		int[] przynaleznoscBefore = new int [numInstances]; //Do sprawdzenia czy pkt sie zamienily
+		//Tworzymy tablice - bedzie nam ona mowila, który punkt nalezy do ktorego skupienia
+		int[] przynaleznosc = new int[numInstances];
+		int[] przynaleznoscBefore = new int[numInstances]; //Do sprawdzenia czy pkt sie zamienily
 		przynaleznoscBefore[0] = 1; //Zeby nam sie warunek w while przypadkowo nie sprawdzil odrazu
 		
 		//No i jedziemy iteracje
@@ -128,7 +163,7 @@ public class Klasyfikacja {
 				minDistance = Double.MAX_VALUE;
 				najmniejszaWartosc = 0;
 				for (int j=0 ; j<liczbaSkupien; j++) {
-					temp = distance(numAttributes,tab[i],srodkiSkupien[j]);
+					temp = Distance.getDistance(numAttributes,tab[i],srodkiSkupien[j]);
 					if (temp < minDistance) {
 						minDistance = temp;
 						najmniejszaWartosc = j;
@@ -162,9 +197,9 @@ public class Klasyfikacja {
 			iteracja++;
 		}
 		
-		this.kSrednichIteracje = iteracja;
-		this.kSrednichLiczbaSkupien = liczbaSkupien;
-		this.kSrednichSrodkiSkupien = srodkiSkupien;
+		this.iteracje = iteracja;
+		this.srodkiSkupien = srodkiSkupien;
+
 		
 		//TESTY
 		//for (int i=0; i<numInstances; i++) {
@@ -202,7 +237,7 @@ public class Klasyfikacja {
 				//Dla konkretnego punktu
 				for (int j=0; j<liczbaNeuronow; j++) {
 					//Liczymy dystans
-					neurony[j].setDist(distance(numAttributes, tab[i], neurony[j].getWektorWag()));
+					neurony[j].setDist(Distance.getDistance(numAttributes, tab[i], neurony[j].getWektorWag()));
 				}
 				Arrays.sort(neurony);
 				
@@ -220,30 +255,31 @@ public class Klasyfikacja {
 		for (int i=0; i<liczbaNeuronow; i++)
 			temp[i] = neurony[i].getWektorWag();
 		
-		this.gazNeuronowyWagi = temp;
-		
+		this.srodkiSkupien = temp;
+		this.iteracje = maxIteracji;
 		
 		//Testy
-		for (int i=0; i<liczbaNeuronow; i++)
-			System.out.println(neurony[i]);
+		//for (int i=0; i<liczbaNeuronow; i++)
+		//	System.out.println(neurony[i]);
 		
-		System.out.println(Arrays.toString(zakresMin));
-		System.out.println(Arrays.toString(zakresMax));
+		//System.out.println(Arrays.toString(zakresMin));
+		//System.out.println(Arrays.toString(zakresMax));
 		
 	}
 	
-	
-	private double distance(int dimension, double[] point1, double[] point2) {
-		double d = 0;
-		//Taka prawie ze euklidesowa, ale bez pierwiastka, bo szkoda procesora
-		for (int i=0; i<dimension; i++) {
-			d += (point1[i] - point2[i])*(point1[i] - point2[i]);
+	public double getBladKwantyzacji() {
+
+		double result = 0;
+		
+		for(int i=0;i<numInstances;i++) {
+			double minDist = Double.MAX_VALUE;
+			for(int j=0;j<srodkiSkupien.length;j++) {
+				double temp = Distance.getDistance(numAttributes, tab[i], srodkiSkupien[j]);
+				if (temp < minDist) minDist = temp;
+			}
+			result += minDist;
 		}
-		d = Math.sqrt(d); //Jakby jednak byla potrzebna pelna euklidesowa
-		//d = (x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2); // Euklidesowa do kwadratu
-		//d = Math.sqrt((x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2)); // Euclidian
-		//d = Math.abs(x1 - x2) + Math.abs(y1 - y2); // Manhattan
-		//d = Math.pow(Math.pow(Math.abs(x1 - x2), p) + Math.pow(Math.abs(y1 - y2), p), (1 / p)); // Minkovski
-	  	return d;
+		result /= numInstances;
+		return result;
 	}
 }

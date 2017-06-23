@@ -20,7 +20,7 @@ public class Voronoi extends JFrame {
 	private final int BORDER_GAP = 20;
 
 	
-	public Voronoi(double minX, double maxX, double minY, double maxY, double[][] tablica,double[][] tablica2, int size ) {
+	public Voronoi(double[] min, double[] max, double[][] tablica, double[][] tablica2, int size ) {
 		super("Voronoi Diagram");
 		//setBounds(x, y, width, height) to specify the position and size of a GUI component 
 		setBounds(5, 5, size, size+30);
@@ -40,17 +40,23 @@ public class Voronoi extends JFrame {
 		int[] py = new int[tablica.length];
 		
 		for (int i = 0; i < tablica.length; i++) {
-			px[i] = convertToPixelCoords(tablica[i][0],minX,maxX,0,size);
-			py[i] = convertToPixelCoords(tablica[i][1],minY,maxY,0,size);
+			px[i] = convertToPixelCoords(tablica[i][0],min[0],max[0],0,size);
+			py[i] = convertToPixelCoords(tablica[i][1],min[1],max[1],0,size);
 			color[i] = rand.nextInt(16777215);
 		}
 		
 		for (int x = 0; x < size; x++) {
 			for (int y = 0; y < size; y++) {
 				int n = 0;
-				for (byte i = 0; i < tablica.length; i++) {
-					if (distance(px[i], py[i], x, y) < distance(px[n], py[n], x, y)) {
+				double[] point1 = {x, y};
+				double[] pointBiggest = {px[n], py[n]};
+				for (int i = 0; i < tablica.length; i++) {
+					double[] pointThis = {px[i], py[i]};
+					
+					if (Distance.getDistance(2, pointThis, point1) < Distance.getDistance(2, pointBiggest, point1)) {
 						n = i;
+						pointBiggest[0] = px[n];
+						pointBiggest[1] = py[n];
 					}
 				}
 				I.setRGB(x, size - y-1, color[n]);
@@ -76,8 +82,8 @@ public class Voronoi extends JFrame {
 		int[] py2 = new int[tablica2.length];
 		
 		for (int i = 0; i < tablica2.length; i++) {
-			px2[i] = convertToPixelCoords(tablica2[i][0],minX,maxX,0,size);
-			py2[i] = convertToPixelCoords(tablica2[i][1],minY,maxY,0,size);
+			px2[i] = convertToPixelCoords(tablica2[i][0],min[0],max[0],0,size);
+			py2[i] = convertToPixelCoords(tablica2[i][1],min[1],max[1],0,size);
 		}
 		
 		g.setColor(Color.WHITE);
@@ -93,15 +99,15 @@ public class Voronoi extends JFrame {
 	     */
 		
 		g.setColor(Color.WHITE);
-		if(minY*maxY >= 0) { //Jezeli nie ma srodka w ukladzie to rysujemy oske na boku
+		if(min[1]*max[1] >= 0) { //Jezeli nie ma srodka w ukladzie to rysujemy oske na boku
 			g.drawLine(BORDER_GAP,size-BORDER_GAP,size-BORDER_GAP,size - BORDER_GAP);
 			
-			double width = maxX - minX;
+			double width = max[0] - min[0];
 			double denomination = findDenomination(width);
-			double start = Math.ceil(minX * 1/denomination)*denomination;
+			double start = Math.ceil(min[0] * 1/denomination)*denomination;
 			
-		    for (double i = start; i < maxX; i+=denomination) {
-		    	int point = convertToPixelCoords(i, minX, maxX, 0, size);
+		    for (double i = start; i < max[0]; i+=denomination) {
+		    	int point = convertToPixelCoords(i, min[0], max[0], 0, size);
 		    	if (point >= BORDER_GAP && point <= size-BORDER_GAP) {
 		    		g.drawLine(point, size - BORDER_GAP, point, size - BORDER_GAP - 10);
 		    		if (i!=0.0)
@@ -110,15 +116,15 @@ public class Voronoi extends JFrame {
 		    }
 		}
 		else { //Oske X rysujemy tam gdzie sie y zeruje czyli
-			int p = size - convertToPixelCoords(0.0, minY, maxY, 0, size);
+			int p = size - convertToPixelCoords(0.0, min[1], max[1], 0, size);
 			g.drawLine(BORDER_GAP,p,size-BORDER_GAP,p);
 			
-			double width = maxX - minX;
+			double width = max[0] - min[0];
 			double denomination = findDenomination(width);
-			double start = Math.ceil(minX * 1/denomination)*denomination;
+			double start = Math.ceil(min[0] * 1/denomination)*denomination;
 			
-		    for (double i = start; i < maxX; i+=denomination) {
-		    	int point = convertToPixelCoords(i, minX, maxX, 0, size);
+		    for (double i = start; i < max[0]; i+=denomination) {
+		    	int point = convertToPixelCoords(i, min[0], max[0], 0, size);
 		    	if (point >= BORDER_GAP && point <= size-BORDER_GAP) {
 		    		g.drawLine(point, p-10, point, p+10);
 		    		if (i!=0.0)
@@ -128,15 +134,15 @@ public class Voronoi extends JFrame {
 			
 			
 		}
-		if(minX*maxX >= 0) {
+		if(min[0]*max[0] >= 0) {
 			g.drawLine(BORDER_GAP,BORDER_GAP,BORDER_GAP,size - BORDER_GAP);
 			
-			double height = maxY - minY;
+			double height = max[1] - min[1];
 			double denomination = findDenomination(height);
-			double start = Math.ceil(minY * 1/denomination)*denomination;
+			double start = Math.ceil(min[1] * 1/denomination)*denomination;
 			
-		    for (double i = start; i < maxY; i+=denomination) {
-		    	int point = size - convertToPixelCoords(i, minY, maxY, 0, size);
+		    for (double i = start; i < max[1]; i+=denomination) {
+		    	int point = size - convertToPixelCoords(i, min[1], max[1], 0, size);
 		    	if (point >= BORDER_GAP && point <= size-BORDER_GAP) {
 		    		g.drawLine(BORDER_GAP, point, BORDER_GAP + 10, point);
 		    		if (i!=0.0)
@@ -145,15 +151,15 @@ public class Voronoi extends JFrame {
 		    }
 		}
 		else {
-			int p = convertToPixelCoords(0.0, minX, maxX, 0, size);
+			int p = convertToPixelCoords(0.0, min[0], max[0], 0, size);
 			g.drawLine(p,BORDER_GAP,p,size-BORDER_GAP);
 			
-			double height = maxY - minY;
+			double height = max[1] - min[1];
 			double denomination = findDenomination(height);
-			double start = Math.ceil(minY * 1/denomination)*denomination;
+			double start = Math.ceil(min[1] * 1/denomination)*denomination;
 			
-			for (double i = start; i < maxY; i+=denomination) {
-		    	int point = size - convertToPixelCoords(i, minY, maxY, 0, size);
+			for (double i = start; i < max[1]; i+=denomination) {
+		    	int point = size - convertToPixelCoords(i, min[1], max[1], 0, size);
 		    	if (point >= BORDER_GAP && point <= size-BORDER_GAP) {
 		    		g.drawLine(p-10, point, p + 10, point);
 		    		if (i!=0.0)
@@ -175,13 +181,13 @@ public class Voronoi extends JFrame {
 		g.drawImage(I, 0, 30, this); //Ta powoduje ze pasek nam nie najezdza
 	}
  
-	double distance(double x1, double y1, double x2, double y2) {
-		double d;
-	    d = Math.sqrt((x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2)); // Euclidian
+	//double distance(double x1, double y1, double x2, double y2) {
+	//	double d;
+	//    d = Math.sqrt((x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2)); // Euclidian
 	//  d = Math.abs(x1 - x2) + Math.abs(y1 - y2); // Manhattan
 	//  d = Math.pow(Math.pow(Math.abs(x1 - x2), p) + Math.pow(Math.abs(y1 - y2), p), (1 / p)); // Minkovski
-	  	return d;
-	}
+	//  	return d;
+	//}
 	
 	double findDenomination(double width) {
 		double result = 1.0;

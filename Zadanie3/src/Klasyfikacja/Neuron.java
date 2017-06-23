@@ -53,7 +53,7 @@ public class Neuron implements Comparable<Neuron> {
 	}
 	
 	private double lambda(int k, int kMax) {
-		return this.lambdaMax*Math.pow(this.lambdaMin/this.lambdaMax, k/kMax);
+		return this.lambdaMax*Math.pow(this.lambdaMin/this.lambdaMax, ((double)k)/kMax);
 	}
 	
 	public void updateWagi(double[] x, int pozycja, int k, int kMax) {
