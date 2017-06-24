@@ -168,13 +168,17 @@ public class Voronoi extends JFrame {
 		    }
 		}
 		
+	}
+	
+	public Voronoi(double[] min, double[] max, double[][] tablica, double[][] tablica2, int size, String nazwaPliku ) {
+	
+		this(min, max, tablica, tablica2, size);
 		//Wyrzucamy do png
 		try {
-			ImageIO.write(I, "png", new File("voronoi.png"));
+			ImageIO.write(I, "png", new File(nazwaPliku));
 		} catch (IOException e) {
- 
+	
 		}
- 
 	}
  
 	public void paint(Graphics g) {

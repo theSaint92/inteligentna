@@ -55,11 +55,13 @@ public class Zabawa {
 		}
 		System.out.println("=====================================================================================================");
 		System.out.printf("Najmniejszy blad kwantyzacji uzyskalismy dla k = " + najlepszeK + ". Wynosi on srednio  %.3f\n", najlepszaKwantyzacja);
+		System.out.println("Rysunek został uzyskany po " + zab.getIteracje() + " iteracjach");
 		System.out.println("=====================================================================================================");
+
 		
 		//Rysujemy Voronoia dla kSrednich
 		zab.kSrednich(najlepszeK, maxIteracji);
-		new Voronoi(zab.getZakresMin(),zab.getZakresMax(),zab.getSrodkiSkupien(),zab.getTab(), 1000).setVisible(true);
+		new Voronoi(zab.getZakresMin(),zab.getZakresMax(),zab.getSrodkiSkupien(),zab.getTab(), 1000 ).setVisible(true);
 		
 		/* ================================================
 		 * EKSPERYMENT 2 - ALGORYTM GAZU NEURONOWEGO
@@ -77,7 +79,7 @@ public class Zabawa {
 		System.out.println("EKSPERYMENT 2");
 		System.out.println("=====================================================================================================");
 		zab.gazNeuronowy(najlepszeK, maxIteracji);
-		new Voronoi(zab.getZakresMin(),zab.getZakresMax(),zab.getSrodkiSkupien(),zab.getTab(), 1000).setVisible(true);
+		new Voronoi(zab.getZakresMin(),zab.getZakresMax(),zab.getSrodkiSkupien(),zab.getTab(), 1000 ).setVisible(true);
 		double kwantyzacjaNeuron = zab.getBladKwantyzacji();
 		System.out.printf("Blad kwantyzacji dla algorytmu gazu neuronowego wynosi: %.3f\n", kwantyzacjaNeuron);
 		System.out.println("=====================================================================================================");
@@ -101,7 +103,7 @@ public class Zabawa {
 		zab.gazNeuronowy(najlepszeK*najlepszeK, maxIteracji);
 		double kwantyzacja31 = zab.getBladKwantyzacji();
 		System.out.printf("W pierwszym kroku podzielilismy na " + najlepszeK*najlepszeK + " obszarow. Blad kwantyzacji wynosi %.3f\n",  kwantyzacja31 );
-		new Voronoi(zab.getZakresMin(),zab.getZakresMax(),zab.getSrodkiSkupien(),zab.getTab(), 1000).setVisible(true);
+		new Voronoi(zab.getZakresMin(),zab.getZakresMax(),zab.getSrodkiSkupien(),zab.getTab(), 1000 ).setVisible(true);
 		double[][] zapisujemy = zab.getTab();
 		double[][] srodkiSkupien = zab.getSrodkiSkupien();
 		//Zastepujemy teraz nasze dane uzyskanymi srodkami skupien
@@ -110,10 +112,10 @@ public class Zabawa {
 		zab.kSrednich(najlepszeK, maxIteracji);
 		double kwantyzacja32 = zab.getBladKwantyzacji();
 		System.out.printf("W drugim kroku podzielilismy otrzymany zbior na " + najlepszeK + " obszarow. Blad kwantyzacji dla tego kroku wynosi %.3f\n",  kwantyzacja32 );
-		new Voronoi(zab.getZakresMin(),zab.getZakresMax(),zab.getSrodkiSkupien(),zab.getTab(), 1000).setVisible(true);
+		new Voronoi(zab.getZakresMin(),zab.getZakresMax(),zab.getSrodkiSkupien(),zab.getTab(), 1000 ).setVisible(true);
 		//Przywracamy w tablicy stare dane
 		zab.setTab(zapisujemy);
-		new Voronoi(zab.getZakresMin(),zab.getZakresMax(),zab.getSrodkiSkupien(),zab.getTab(), 1000).setVisible(true);
+		new Voronoi(zab.getZakresMin(),zab.getZakresMax(),zab.getSrodkiSkupien(),zab.getTab(), 1000 ).setVisible(true);
 		//I liczymy blad kwantyzacji dla ostatnich wynikow
 		double kwantyzacja33 = zab.getBladKwantyzacji();
 		System.out.printf("Blad kwantyzacji dla calego algorytmu 'mieszanego ;)' wynosi: %.3f\n",  kwantyzacja33 );
