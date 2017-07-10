@@ -236,7 +236,7 @@ public class Klasyfikacja {
 			for (int i=0; i<numInstances; i++) {
 				//Dla konkretnego punktu
 				for (int j=0; j<liczbaNeuronow; j++) {
-					//Liczymy dystans
+					//Liczymy dystans od kazdego neurony
 					neurony[j].setDist(Distance.getDistance(numAttributes, tab[i], neurony[j].getWektorWag()));
 				}
 				Arrays.sort(neurony);

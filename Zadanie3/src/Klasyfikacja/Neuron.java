@@ -18,7 +18,7 @@ public class Neuron implements Comparable<Neuron> {
 		this.wymiar = wymiar;
 		double[] losowyWektor = new double[wymiar];
 		for (int i = 0; i<wymiar; i++) {
-			losowyWektor[i] = (Math.random()+0.5)/2.0; //Znormalizowany zakres 0.25 - 0.75
+			losowyWektor[i] = (Math.random()); // zakres 0.25 - 0.75
 			losowyWektor[i] = (zakresMax[i]-zakresMin[i])*losowyWektor[i] + zakresMin[i];
 		}
 		this.wektorWag = losowyWektor;
@@ -48,21 +48,21 @@ public class Neuron implements Comparable<Neuron> {
 		this.lambdaMax = lambdaMax;
 	}
 
-	private double wspolczynnikUczenia(int k, int kMax) {
+	private double wspolczynnikUczenia(int k, int kMax) {                                        //k - iteracja, kMax - maksymalna liczba iteracji
 		return this.maxWspolczynnikUczenia*Math.pow(this.minWspolczynnikUczenia/this.maxWspolczynnikUczenia, (double)k/kMax);
 	}
 	
-	private double lambda(int k, int kMax) {
+	private double lambda(int k, int kMax) {                                                   //k - iteracja, kMax - maksymalna liczba iteracji
 		return this.lambdaMax*Math.pow(this.lambdaMin/this.lambdaMax, ((double)k)/kMax);
 	}
 	
 	public void updateWagi(double[] x, int pozycja, int k, int kMax) {
 		double etak = wspolczynnikUczenia(k, kMax);
-		double gix = Math.exp(-pozycja/lambda(k,kMax));
+		double gix = Math.exp(-pozycja/lambda(k,kMax));   //Funkcja sasiedztwa i-tego neuronu
 		for (int i = 0; i<wymiar; i++) {
 			wektorWag[i] = wektorWag[i] + etak*gix*(x[i] - wektorWag[i]);
 		}
-		//System.out.println("etak " + etak + " gix " + gix);
+		//System.out.println("etak " + etak + " gix " + gix + " lambda k/kmax: " + lambda(k,kMax) );
 	}
 
 	@Override

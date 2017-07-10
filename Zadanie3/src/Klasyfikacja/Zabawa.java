@@ -13,7 +13,7 @@ public class Zabawa {
 		 * DEFINIUJEMY ZBIOR NA KTORYM DZIALAMY
 		 * ================================================
 		 */
-		Klasyfikacja zab = new Klasyfikacja("./sampledata/attract.arff");
+		Klasyfikacja zab = new Klasyfikacja("./sampledata/attract_small.arff");
 		
 		
 		/* ================================================
