@@ -1,5 +1,12 @@
 package Klasyfikacja;
 
+import weka.classifiers.functions.MultilayerPerceptron;
+import weka.classifiers.functions.SMO;
+import weka.classifiers.functions.supportVector.PolyKernel;
+import weka.core.Instances;
+import weka.core.SelectedTag;
+import weka.core.converters.ConverterUtils.DataSource;
+
 //import java.util.Arrays;
 //import java.io.*;
 //import java.util.*;
@@ -9,13 +16,35 @@ public class Zabawa {
 
 	public static void main(String[] args) throws Exception {
 		
+		Instances banknoty = DataSource.read("./sampledata/banknote-authentication.arff");
+        //System.out.println("Banknoty: "+banknoty);
+        banknoty.setClassIndex(4);
+        
+        MultilayerPerceptron per = new MultilayerPerceptron();
+        
+        per.buildClassifier(banknoty);
+        //System.out.println("Per: "+per);
+        per.getMomentum();
+        
+        SMO smo = new SMO();
+        PolyKernel krn = new PolyKernel(); //smo.getKernel();
+//        RBFKernel rbf = new RBFKernel();
+//        rbf.setGamma(0.3);
+        krn.setExponent(2);
+        krn.setUseLowerOrder(true);
+//        smo.setC(2);
+        smo.setKernel(krn);
+        smo.setFilterType(new SelectedTag(SMO.FILTER_STANDARDIZE, SMO.TAGS_FILTER));
+        smo.buildClassifier(banknoty);
+        System.out.println("smo: "+smo);
+        
 		/* ================================================
 		 * DEFINIUJEMY ZBIOR NA KTORYM DZIALAMY
 		 * ================================================
-		 */
-		Klasyfikacja zab = new Klasyfikacja("./sampledata/eb.arff");
+		 *
+		Klasyfikacja zab = new Klasyfikacja("./sampledata/banknote-authentication.arff");
 		
-		
+	
 		/* ================================================
 		 * EKSPERYMENT 1 - GRUPOWANIE OBIEKTOW - K-SREDNICH
 		 * ================================================
@@ -27,7 +56,7 @@ public class Zabawa {
 		 * srednia bledu kwantyzacji z tych 5 testow. 'Naj-
 		 * lepsze k' zobrazujemy za pomocą Mozaiki Voronoia
 		 * 
-		 */
+		 *
 		
 		System.out.println("=====================================================================================================");
 		System.out.println("EKSPERYMENT 1");
@@ -73,7 +102,7 @@ public class Zabawa {
 		 * algorytmie. Wyniki te porownamy z wynikami z pop-
 		 * rzedniego eksperymentu
 		 * 
-		 */
+		 *
 			
 		System.out.println("=====================================================================================================");
 		System.out.println("EKSPERYMENT 2");
@@ -95,7 +124,7 @@ public class Zabawa {
 		 * pomocy algorytmu k-srednich i wyniki te porownu-
 		 * jemy z wynikami eksperymentu 1
 		 * 
-		 */
+		 *
 		
 		System.out.println("=====================================================================================================");
 		System.out.println("EKSPERYMENT 3");
@@ -120,7 +149,7 @@ public class Zabawa {
 		double kwantyzacja33 = zab.getBladKwantyzacji();
 		System.out.printf("Blad kwantyzacji dla calego algorytmu 'mieszanego ;)' wynosi: %.3f\n",  kwantyzacja33 );
 		System.out.println("=====================================================================================================");
-		
+		*/
 
 	}
 
